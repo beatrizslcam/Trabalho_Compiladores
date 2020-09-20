@@ -14,8 +14,8 @@ def lex(content: str):
         "return": re.compile(r"return"),
         "while": re.compile(r"while"),
         "operator": re.compile(r"[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}]"),
-        "ID": re.compile(r"[a-z0-9]+"),
-        "NUM": re.compile(r"[0-9]+")
+        "NUM": re.compile(r"[0-9]+"),
+        "ID": re.compile(r"[a-z]+")
     }
 
     # Split file contents by its lines.
