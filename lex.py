@@ -6,7 +6,7 @@ def lex(content: str):
 
     # Build match patterns.
     patterns = {
-        "ws": re.compile(r"[ \t]"),
+        "ws": re.compile(r"\s*"),
         "if": re.compile(r"if"),
         "else": re.compile(r"else"),
         "int": re.compile(r"int"),
