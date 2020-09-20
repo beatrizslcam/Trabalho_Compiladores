@@ -2,7 +2,6 @@ import re
 
 def lex(content: str):
     line_n = 1
-    column_n = 1
     result = list()
 
     # Build match patterns.
@@ -24,6 +23,7 @@ def lex(content: str):
     
     # For each line, scan 
     for line in lines:
+        column_n = 1
         while(column_n <= len(line)):
             cur_match = None
             cur_type = None
