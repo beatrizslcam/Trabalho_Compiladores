@@ -5,18 +5,18 @@ def lex(content: str):
     result = list()
 
     # Build match patterns.
-    patterns = {
-        "ws": re.compile(r"\s*"),
-        "if": re.compile(r"if"),
-        "else": re.compile(r"else"),
-        "int": re.compile(r"int"),
-        "void": re.compile(r"void"),
-        "return": re.compile(r"return"),
-        "while": re.compile(r"while"),
-        "operator": re.compile(r"[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}]"),
-        "NUM": re.compile(r"[0-9]+"),
-        "ID": re.compile(r"[a-z]+")
-    }
+    pattern = re.compile(r"""
+    (?P<whitespace>\s)
+    |(?P<if>if)
+    |(?P<else>else)
+    |(?P<int>int)
+    |(?P<void>void)
+    |(?P<return>return)
+    |(?P<while>while)
+    |(?P<operator>[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}])
+    |(?P<ID>[a-z]+)
+    |(?P<NUM>[0-9]+)
+    """, re.VERBOSE)
 
     # Split file contents by its lines.
     lines = content.splitlines()
@@ -25,28 +25,21 @@ def lex(content: str):
     for line in lines:
         column_n = 1
         while(column_n <= len(line)):
-            cur_match = None
-            cur_type = None
-            
             # Find longest match.
-            for type, pattern in patterns.items():
-                match = pattern.match(line, column_n - 1)
-                if match != None and (cur_match == None or len(cur_match.group()) < len(match.group())):
-                    cur_match = match
-                    cur_type = type
+            match = pattern.match(line, column_n - 1)
 
             # If no match was found, next character must be invalid
-            if cur_match == None:
+            if not match:
                 print("Error: invalid character at line ", line_n, ", column ", column_n, ".", sep = '')
                 column_n += 1
             else:
-                if cur_type == "ws":
+                if match.lastgroup == "whitespace":
                     pass
-                elif cur_type == "operator":
-                    result.append(cur_match.group())
+                elif match.lastgroup == "operator":
+                    result.append(match.group())
                 else:
-                    result.append(cur_type)
-                column_n += len(cur_match.group())
+                    result.append(match.lastgroup)
+                column_n += len(match.group())
 
         line_n += 1
     return result
