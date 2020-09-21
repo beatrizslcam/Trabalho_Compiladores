@@ -2,12 +2,11 @@ import re
 
 def lex(content: str):
     line_n = 1
-    column_n = 1
     result = list()
 
     # Build match patterns.
     patterns = {
-        "ws": re.compile(r"[ \t]"),
+        "ws": re.compile(r"\s*"),
         "if": re.compile(r"if"),
         "else": re.compile(r"else"),
         "int": re.compile(r"int"),
@@ -15,8 +14,8 @@ def lex(content: str):
         "return": re.compile(r"return"),
         "while": re.compile(r"while"),
         "operator": re.compile(r"[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}]"),
-        "ID": re.compile(r"[a-z0-9]+"),
-        "NUM": re.compile(r"[0-9]+")
+        "NUM": re.compile(r"[0-9]+"),
+        "ID": re.compile(r"[a-z]+")
     }
 
     # Split file contents by its lines.
@@ -24,6 +23,7 @@ def lex(content: str):
     
     # For each line, scan 
     for line in lines:
+        column_n = 1
         while(column_n <= len(line)):
             cur_match = None
             cur_type = None
