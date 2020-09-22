@@ -4,6 +4,12 @@ class LexToken:
     def __init__(self, type, tag = None):
         self.type = type
         self.tag = tag
+    
+    def __eq__(self, other):
+        return self.type == other.type and self.tag == other.tag
+
+    def __str__(self):
+        return "Type:'{}' Tag:'{}' \}".format(self.type, self.tag)
 
 def lex(content: str):
     line_n = 1
