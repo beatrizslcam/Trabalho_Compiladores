@@ -55,7 +55,7 @@ def lex(content: str):
                 result.append(LexToken("ID", match.group()))
             # If a NUM was found, create a token associated with the numeric value as int.
             elif match.lastgroup == "NUM":
-                result.append(LexToken("NUM"), int(match.group()))
+                result.append(LexToken("NUM", int(match.group())))
             # Otherwise, just add the keyword name.
             else:
                 result.append(LexToken(match.lastgroup))
