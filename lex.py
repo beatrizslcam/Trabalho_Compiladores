@@ -1,5 +1,10 @@
 import regex
 
+class LexToken:
+    def __init__(self, type, tag = None):
+        self.type = type
+        self.tag = tag
+
 def lex(content: str):
     line_n = 1
     result = list()
@@ -38,10 +43,16 @@ def lex(content: str):
                 pass
             # If an operator was found, add the identified operator into the list.
             elif match.lastgroup == "operator":
-                result.append(match.group())
-            # Otherwise, add the capture group name into the list.
+                result.append(LexToken(match.group()))
+            # If an ID was found, create a token associated with the idenfier name.
+            elif match.lastgroup == "ID":
+                result.append(LexToken("ID", match.group()))
+            # If a NUM was found, create a token associated with the numeric value as int.
+            elif match.lastgroup == "NUM":
+                result.append(LexToken("NUM"), int(match.group()))
+            # Otherwise, just add the keyword name.
             else:
-                result.append(match.lastgroup)
+                result.append(LexToken(match.lastgroup))
 
             # Advance the stream towards the character after the matched token.
             column_n += len(match.group())
