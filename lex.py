@@ -9,7 +9,7 @@ class LexToken:
         return self.type == other.type and self.tag == other.tag
 
     def __str__(self):
-        return "Type:'{}' Tag:'{}' \}".format(self.type, self.tag)
+        return "Type:'{}' Tag:'{}'".format(self.type, self.tag)
 
 def lex(content: str):
     line_n = 1
