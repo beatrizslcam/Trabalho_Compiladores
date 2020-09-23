@@ -25,7 +25,7 @@ def lex(content: str):
     |(?P<return>return)
     |(?P<while>while)
     |(?P<operator>[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}])
-    |(?P<ID>[a-z]+)
+    |(?P<ID>[a-zA-Z]+)
     |(?P<NUM>[0-9]+)
     """, regex.VERBOSE)
 
