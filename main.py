@@ -1,4 +1,5 @@
-
+import lex as l
 f = open('exemplo.txt', 'r')
 stext = f.read()
-print(stext)
+
+print(l.lex(stext))
