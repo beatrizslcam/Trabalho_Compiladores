@@ -1,22 +1,33 @@
-import re
+import regex
+
+class LexToken:
+    def __init__(self, type, tag = None):
+        self.type = type
+        self.tag = tag
+    
+    def __eq__(self, other):
+        return self.type == other.type and self.tag == other.tag
+
+    def __str__(self):
+        return "Type:'{}' Tag:'{}'".format(self.type, self.tag)
 
 def lex(content: str):
     line_n = 1
     result = list()
 
     # Build match patterns.
-    patterns = {
-        "ws": re.compile(r"\s*"),
-        "if": re.compile(r"if"),
-        "else": re.compile(r"else"),
-        "int": re.compile(r"int"),
-        "void": re.compile(r"void"),
-        "return": re.compile(r"return"),
-        "while": re.compile(r"while"),
-        "operator": re.compile(r"[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}]"),
-        "NUM": re.compile(r"[0-9]+"),
-        "ID": re.compile(r"[a-z]+")
-    }
+    pattern = regex.compile(r"""
+    (?p)(?P<whitespace>\s)
+    |(?P<if>if)
+    |(?P<else>else)
+    |(?P<int>int)
+    |(?P<void>void)
+    |(?P<return>return)
+    |(?P<while>while)
+    |(?P<operator>[\+\-\*/<{<=}>{>=}{==}{!=}=;,\(\)\{\}{\\\*}{/\*}])
+    |(?P<ID>[a-zA-Z]+)
+    |(?P<NUM>[0-9]+)
+    """, regex.VERBOSE)
 
     # Split file contents by its lines.
     lines = content.splitlines()
@@ -25,28 +36,32 @@ def lex(content: str):
     for line in lines:
         column_n = 1
         while(column_n <= len(line)):
-            cur_match = None
-            cur_type = None
-            
-            # Find longest match.
-            for type, pattern in patterns.items():
-                match = pattern.match(line, column_n - 1)
-                if match != None and (cur_match == None or len(cur_match.group()) < len(match.group())):
-                    cur_match = match
-                    cur_type = type
+            # Find the longest match.
+            match = pattern.match(line, column_n - 1)
 
-            # If no match was found, next character must be invalid
-            if cur_match == None:
+            # If no match was found, next character must be invalid. Raise a error message and move towards the next character.
+            if not match:
                 print("Error: invalid character at line ", line_n, ", column ", column_n, ".", sep = '')
                 column_n += 1
+                continue
+            # If whitespace was found, ignore it.
+            elif match.lastgroup == "whitespace":
+                pass
+            # If an operator was found, add the identified operator into the list.
+            elif match.lastgroup == "operator":
+                result.append(LexToken(match.group()))
+            # If an ID was found, create a token associated with the idenfier name.
+            elif match.lastgroup == "ID":
+                result.append(LexToken("ID", match.group()))
+            # If a NUM was found, create a token associated with the numeric value as int.
+            elif match.lastgroup == "NUM":
+                result.append(LexToken("NUM", int(match.group())))
+            # Otherwise, just add the keyword name.
             else:
-                if cur_type == "ws":
-                    pass
-                elif cur_type == "operator":
-                    result.append(cur_match.group())
-                else:
-                    result.append(cur_type)
-                column_n += len(cur_match.group())
+                result.append(LexToken(match.lastgroup))
+
+            # Advance the stream towards the character after the matched token.
+            column_n += len(match.group())
 
         line_n += 1
     return result
