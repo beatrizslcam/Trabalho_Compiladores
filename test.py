@@ -1,5 +1,6 @@
 import unittest
 import lex
+import sintaxe
 
 class LexTest(unittest.TestCase):
     def test_basecases(self):
@@ -34,6 +35,16 @@ class LexTest(unittest.TestCase):
         "ID", "=", "NUM", ";", 
         "ID", "=", "NUM", ";", 
         "}"])
+
+class SyntaxTest(unittest.TestCase):
+    def test_basic(self):
+        print(sintaxe.sintaxe(lex.lex("""
+                void main(void)
+                { int x; int y;
+                    int z;
+                    x = 5;
+                    y = 10;
+                }""")).pretty())
 
 if __name__ == '__main__':
     unittest.main()
