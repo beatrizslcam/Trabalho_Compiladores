@@ -1,15 +1,17 @@
 import regex
 
+
 class LexToken:
-    def __init__(self, type, tag = None):
+    def __init__(self, type, tag=None):
         self.type = type
         self.tag = tag
-    
+
     def __eq__(self, other):
         return self.type == other.type and self.tag == other.tag
 
     def __str__(self):
         return "Type:'{}' Tag:'{}'".format(self.type, self.tag)
+
 
 def lex(content: str):
     line_n = 1
@@ -31,8 +33,8 @@ def lex(content: str):
 
     # Split file contents by its lines.
     lines = content.splitlines()
-    
-    # For each line, scan 
+
+    # For each line, scan
     for line in lines:
         column_n = 1
         while(column_n <= len(line)):
@@ -41,7 +43,8 @@ def lex(content: str):
 
             # If no match was found, next character must be invalid. Raise a error message and move towards the next character.
             if not match:
-                print("Error: invalid character at line ", line_n, ", column ", column_n, ".", sep = '')
+                print("Error: invalid character at line ",
+                      line_n, ", column ", column_n, ".", sep='')
                 column_n += 1
                 continue
             # If whitespace was found, ignore it.

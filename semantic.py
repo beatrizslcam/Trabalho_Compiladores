@@ -2,25 +2,16 @@ from lark import Lark
 from sintaxe import TokenLexer
 
 
-class Symbol:
-    def __init__(self,tipo,escopo):
-        self.tipo = tipo;
-        self.escopo = escopo;
-        
-
-  
 class SymbolTable:
     def __init__(self):
-        self.tabela = {};
-    
-  
+        self.table = {}
+
+    def add_into_table(self, name, value):
+        self.table = {name: value}
 
 
+class Semantic_Analizer:
+    def __init__(self, tree):
+        pass
 
-
-
-
-
-
-
-
+    def type_checker():
